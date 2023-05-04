@@ -1,11 +1,14 @@
 import cv2
 import time
+from send_email import send_email
+
 
 video = cv2.VideoCapture(0) #opens your webcam
 time.sleep(1)
 first_frame = None
+status_list = []
 while True:
-
+    status = 0  #no objcet in frame
     check, frame = video.read() #two variables because the video.read method returns two values
     gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) #convert rgb frame to gray scale frame
     gray_blur = cv2.GaussianBlur(gray_frame, (21, 21), 0) #blur the grayscale image
@@ -24,7 +27,15 @@ while True:
         if cv2.contourArea(contour) < 5000:  #detect objects that enter the frame
             continue
         x, y, w, h = cv2.boundingRect(contour)
-        cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 3)
+        rectangle = cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 3) #draw a rectangle around detected object
+        if rectangle.any():
+            status = 1  #object in frame
+
+    status_list.append(status)
+    status_list = status_list[-2:]
+    if status_list[0] == 1 and status_list[1] == 0:
+        send_email()
+
 
     cv2.imshow('Video', frame)
     key = cv2.waitKey(1) #create keyboard key object
