@@ -1,7 +1,10 @@
+
 import cv2
 import time
 from send_email import send_email
 import glob
+import os
+from threading import Thread
 
 
 video = cv2.VideoCapture(0) #opens your webcam
@@ -9,6 +12,12 @@ time.sleep(1)
 first_frame = None
 status_list = []
 count = 1
+
+
+def clean_images_folder(): #function to remove images inside folder and email is sent
+    pictures = glob.glob("images/*.png")
+    for picture in pictures:
+        os.remove(picture)
 while True:
     status = 0  #no objcet in frame
     check, frame = video.read() #two variables because the video.read method returns two values
@@ -44,15 +53,23 @@ while True:
     status_list.append(status)
     status_list = status_list[-2:]
     if status_list[0] == 1 and status_list[1] == 0:
-        send_email(main_image)
+        email_thread = Thread(target=send_email, args=(main_image,))
+        email_thread.daemon = True #allow send email function to be executed in the background
+        clean_thread = Thread(target=clean_images_folder)
+        clean_thread.daemon = True  # clean_images_folder function to be executed in the background
+        email_thread.start()
+        clean_thread.start()
+
+
 
 
     cv2.imshow('Video', frame)
     key = cv2.waitKey(1) #create keyboard key object
-    if key == ord('q'):
+    if key == ord('q'): #the program ends when you press the q key on keyboard
         break
 
 video.release()
+clean_thread.start() #deletes images when user quits program
 
 
 

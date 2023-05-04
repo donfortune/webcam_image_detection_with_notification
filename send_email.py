@@ -7,7 +7,7 @@ def send_email(image_path):
     host = "smtp.gmail.com"
     port = 465
     username = 'donfortunet.df@gmail.com'
-    password = 'kktoyewnkmctutke'
+    password = 'xxxxxxxxxxxxxxxxxx'
     receiver_email = 'osowoayiobi@gmail.com'
     message = EmailMessage()
     message['Subject'] = 'New Image Found'
