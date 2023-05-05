@@ -9,7 +9,7 @@ def send_email(image_path):
     username = 'donfortunet.df@gmail.com'
     password = 'xxxxxxxxxxxxxxxxxx'
     receiver_email = 'osowoayiobi@gmail.com'
-    message = EmailMessage()
+    message = EmailMessage(). #from the imported module
     message['Subject'] = 'New Image Found'
     message.set_content('New image')
 
