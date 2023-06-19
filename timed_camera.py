@@ -8,7 +8,7 @@ formatted_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(current_time)
 
 
 st.title('Motion Detection')
-start = st.button('Start Camera')
+start = st.button('Start Camera'). #the button starts your computer's webcam
 
 if start:
     image = st.image([])
